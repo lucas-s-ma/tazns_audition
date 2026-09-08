@@ -554,7 +554,7 @@ p {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 310px;
   gap: 24px;
-  align-items: start;
+  align-items: stretch;
 }
 .sticky {
   position: sticky;
@@ -564,9 +564,17 @@ p {
 .vibe {
   border-top: 3px solid #7da6d1;
   margin-top: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+.vibe .field {
+  flex: 1;
+  display: flex;
 }
 .vibe textarea {
-  min-height: 275px;
+  flex: 1;
+  min-height: 0;
 }
 .vibe .rating {
   font-size: 10px;

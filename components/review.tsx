@@ -52,40 +52,43 @@ export function EvaluationEditor({
     </>
   );
   return (
-    <div className={compact ? '' : 'review-grid'}>
-      <div>
-        <nav className="tabs" aria-label="Evaluation categories">
-          {main.map((c) => (
-            <button key={c} className={tab === c ? 'active' : ''} onClick={() => setTab(c)}>
-              {labels[c]}
-              <i className={`mini-dot ${e[`${c}_rating`]?.toLowerCase() ?? 'grey'}`} />
-            </button>
-          ))}
-        </nav>
-        {main.map((cat) => (
-          <section key={cat} className="panel editor" hidden={tab !== cat}>
-            {pane(cat)}
-          </section>
+    <div className={compact ? '' : 'review-editor'}>
+      <nav className="tabs" aria-label="Evaluation categories">
+        {main.map((c) => (
+          <button key={c} className={tab === c ? 'active' : ''} onClick={() => setTab(c)}>
+            {labels[c]}
+            <i className={`mini-dot ${e[`${c}_rating`]?.toLowerCase() ?? 'grey'}`} />
+          </button>
         ))}
-        <div className="rating-summary">
-          {categories.map((cat) => (
-            <span key={cat}>
-              {labels[cat]}{' '}
-              <b className={`badge ${e[`${cat}_rating`]?.toLowerCase() ?? 'grey'}`}>
-                {e[`${cat}_rating`] ?? 'UNSET'}
-              </b>
-            </span>
+      </nav>
+      <div className={compact ? '' : 'review-grid'}>
+        <div>
+          {main.map((cat) => (
+            <section key={cat} className="panel editor" hidden={tab !== cat}>
+              {pane(cat)}
+            </section>
           ))}
         </div>
+        {!compact && (
+          <aside className="panel sticky vibe">
+            {pane('vibe')}
+            <p className="muted small">
+              Note down your first impressions, cultural fit, and any other behavioral notes you
+              want to capture.
+            </p>
+          </aside>
+        )}
       </div>
-      {!compact && (
-        <aside className="panel sticky vibe">
-          {pane('vibe')}
-          <p className="muted small">
-            Keep your first impressions here as you listen. This pane stays with you.
-          </p>
-        </aside>
-      )}
+      <div className="rating-summary">
+        {categories.map((cat) => (
+          <span key={cat}>
+            {labels[cat]}{' '}
+            <b className={`badge ${e[`${cat}_rating`]?.toLowerCase() ?? 'grey'}`}>
+              {e[`${cat}_rating`] ?? 'UNSET'}
+            </b>
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
