@@ -127,7 +127,7 @@ export function Workspace({ path }: { path: string[] }) {
           <div className="brand">
             <AudioLines />
             <span>
-              temptasians<span className="brand-sub">DUKE UNIVERSITY</span>
+              Temptasians<span className="brand-sub">DUKE UNIVERSITY</span>
             </span>
           </div>
           <div>
@@ -148,9 +148,8 @@ export function Workspace({ path }: { path: string[] }) {
           <span className="eyebrow">WELCOME TO COUNCIL</span>
           <h2>Let’s get you settled.</h2>
           <p>
-            Enter your first name.
+            Enter your first name e.g. Kevin.
             <br />
-            Capitalize the first letter.
             <br />
             If you know duplicate first names will occur among council members, use your full name
             instead.
@@ -172,7 +171,7 @@ export function Workspace({ path }: { path: string[] }) {
                 maxLength={80}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Lucas"
+                placeholder="e.g. Kevin"
                 autoComplete="given-name"
               />
             </label>
@@ -324,7 +323,7 @@ export function Workspace({ path }: { path: string[] }) {
         <a href="/" className="brand">
           <AudioLines />
           <span>
-            temptasians<span className="brand-sub">AUDITION COUNCIL</span>
+            Temptasians<span className="brand-sub">AUDITION COUNCIL</span>
           </span>
         </a>
         <div className="cycle-label">AUDITION CYCLE</div>

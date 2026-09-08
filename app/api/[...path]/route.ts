@@ -42,7 +42,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ path
       return new NextResponse(new Uint8Array(buffer), {
         headers: {
           'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          'Content-Disposition': `attachment; filename="temptasians-${data.cycle.id}.xlsx"`,
+          'Content-Disposition': `attachment; filename="Temptasians-${data.cycle.id}.xlsx"`,
           'Cache-Control': 'no-store',
         },
       });
