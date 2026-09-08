@@ -252,6 +252,9 @@ p {
   margin-left: 240px;
   min-width: 0;
   flex: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 .topbar {
   height: 44px;
@@ -284,10 +287,11 @@ p {
   background: #418367;
 }
 .content {
-  padding: 25px 40px 60px;
+  padding: 25px 40px 20px;
   max-width: 1800px;
-  margin: auto;
-  min-height: calc(100vh - 134px);
+  margin: 0 auto;
+  width: 100%;
+  flex: 1;
 }
 .page-heading {
   display: flex;
@@ -901,7 +905,7 @@ p {
   margin-bottom: 15px;
 }
 footer {
-  padding: 10px 40px;
+  padding: 7px 40px;
   border-top: 1px solid var(--line);
   font-size: 10px;
   color: #617792;
