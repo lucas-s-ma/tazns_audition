@@ -255,6 +255,8 @@ p {
 }
 .topbar {
   height: 56px;
+  width: 70%;
+  margin: 0 auto;
   background: #ffffffb8;
   border-bottom: 1px solid var(--line);
   padding: 0 40px;
@@ -901,6 +903,8 @@ p {
   margin-bottom: 15px;
 }
 footer {
+  width: 50%;
+  margin: 0 auto;
   padding: 20px 40px;
   border-top: 1px solid var(--line);
   font-size: 10px;
@@ -1077,6 +1081,10 @@ footer {
   }
 }
 @media (max-width: 800px) {
+  .topbar,
+  footer {
+    width: 100%;
+  }
   .sidebar {
     position: relative;
     width: 100%;
