@@ -115,8 +115,10 @@ export function Workspace({ path }: { path: string[] }) {
     try {
       await action();
       await refresh();
+      return true;
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Request failed');
+      return false;
     } finally {
       setBusy(false);
     }
@@ -436,7 +438,7 @@ export function Workspace({ path }: { path: string[] }) {
           </span>
           <Realtime refresh={refresh} />
         </header>
-        <main className="content">
+        <main className={`content${page === 'deliberation' ? ' deliberation-content' : ''}`}>
           {error && (
             <div className="error-banner" role="alert">
               {error}
@@ -792,7 +794,7 @@ export function Workspace({ path }: { path: string[] }) {
                 </div>
               </>
             ) : (
-              <>
+              <div className="deliberation-board-page">
                 <div className="page-heading">
                   <div>
                     <span className="eyebrow">FIND OUR NEXT HARMONY</span>
@@ -805,23 +807,57 @@ export function Workspace({ path }: { path: string[] }) {
                     </a>
                   )}
                 </div>
-                <div className="board-legend">
-                  <span>Undecided</span>
-                  <span>Accepted · by vocal section</span>
-                  <span>Rejected</span>
-                </div>
                 <Board
                   candidates={s.candidates}
                   team={s.team}
-                  onMove={(candidateId, lane) =>
-                    void act('move', {
-                      id: candidateId,
-                      status: lane === 'UNDECIDED' || lane === 'REJECTED' ? lane : 'ACCEPTED',
-                      section: lane === 'UNDECIDED' || lane === 'REJECTED' ? null : lane,
-                    })
-                  }
+                  onMove={(candidateId, lane) => {
+                    const placement =
+                      lane === 'UNDECIDED' || lane === 'REJECTED'
+                        ? {
+                            status: lane,
+                            section: null,
+                          }
+                        : {
+                            status: 'ACCEPTED',
+                            section: lane,
+                          };
+                    const previousCandidate = s.candidates.find(
+                      (candidate) => candidate.id === candidateId,
+                    );
+                    setSnapshot((current) =>
+                      current
+                        ? {
+                            ...current,
+                            candidates: current.candidates.map((candidate) =>
+                              candidate.id === candidateId
+                                ? {
+                                    ...candidate,
+                                    deliberation_status:
+                                      placement.status as Candidate['deliberation_status'],
+                                    accepted_section:
+                                      placement.section as Candidate['accepted_section'],
+                                  }
+                                : candidate,
+                            ),
+                          }
+                        : current,
+                    );
+                    void act('move', { id: candidateId, ...placement }).then((saved) => {
+                      if (saved || !previousCandidate) return;
+                      setSnapshot((current) =>
+                        current
+                          ? {
+                              ...current,
+                              candidates: current.candidates.map((candidate) =>
+                                candidate.id === candidateId ? previousCandidate : candidate,
+                              ),
+                            }
+                          : current,
+                      );
+                    });
+                  }}
                 />
-              </>
+              </div>
             ))}
           {page === 'data' &&
             (!s.unlocked ? (
