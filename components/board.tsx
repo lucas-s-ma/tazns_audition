@@ -43,8 +43,12 @@ function CardContents({
       </p>
       <p>
         Primary: {c.primary_section ?? 'Unset'}
-        <br />
-        Secondary: {c.secondary_section ?? 'Unset'}
+        {c.secondary_section && c.secondary_section !== 'None' && (
+          <>
+            <br />
+            Secondary: {c.secondary_section}
+          </>
+        )}
       </p>
       <div className="team-overall">
         <span>Team Overall:</span>
