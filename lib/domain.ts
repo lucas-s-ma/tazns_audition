@@ -29,6 +29,7 @@ export interface Cycle {
   name: string;
   is_active: boolean;
   mode: 'AUDITION' | 'DELIBERATION';
+  deliberation_active: boolean;
   created_at: string;
 }
 export const classes = ['2027', '2028', '2029', '2030', 'Graduate', 'DKU', 'Fuqua'] as const;
@@ -120,8 +121,11 @@ export function canSeeExcluded(user: User, unlocked: boolean) {
 export function canViewCandidate(user: User, candidate: Candidate, unlocked: boolean) {
   return !candidate.excluded || canSeeExcluded(user, unlocked);
 }
+export function isDeliberation(cycle: Cycle) {
+  return cycle.deliberation_active ?? cycle.mode === 'DELIBERATION';
+}
 export function canReadDetails(viewer: string, owner: string, cycle: Cycle, unlocked: boolean) {
-  return viewer === owner || cycle.mode === 'DELIBERATION' || unlocked;
+  return viewer === owner || isDeliberation(cycle) || unlocked;
 }
 export function canViewPeerOverall(candidate: Candidate) {
   return candidate.state === 'COMPLETED';

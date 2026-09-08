@@ -145,7 +145,7 @@ test('two real identities: durable autosave, privacy, realtime workflow, board a
     const workbook = await a.request.get(`${baseURL}/api/export/${cycle.id}`);
     expect(workbook.ok()).toBe(true);
     const book = new ExcelJS.Workbook();
-    await book.xlsx.load(await workbook.body());
+    await book.xlsx.load(Buffer.from(await workbook.body()) as unknown as never);
     expect(book.worksheets.map((s) => s.name)).toEqual([
       'Summary',
       '1 Verification Singer',

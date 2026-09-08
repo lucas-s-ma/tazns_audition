@@ -1,10 +1,10 @@
 @import 'tailwindcss';
 :root {
-  --ink: #1d2c32;
+  --ink: #172b4d;
   --muted: #738087;
-  --accent: #27675d;
+  --accent: #00539b;
   --line: #e1e6e3;
-  --paper: #f6f7f4;
+  --paper: #f4f7fb;
   --green: #e4f1e6;
   --yellow: #fff0c9;
   --red: #f9e1e2;
@@ -310,6 +310,24 @@ p {
   border-radius: 9px;
   padding: 22px 0;
   margin-bottom: 26px;
+}
+.compact-summary {
+  grid-template-columns: 1.35fr repeat(5, 1fr);
+  padding: 14px 0;
+  margin-bottom: 26px;
+}
+.compact-summary > div {
+  padding: 0 18px;
+}
+.compact-summary span {
+  margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-size: 9px;
+}
+.compact-summary b {
+  font-size: 22px;
+  color: var(--accent);
 }
 .stats > div {
   padding: 0 26px;

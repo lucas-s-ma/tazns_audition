@@ -353,7 +353,7 @@ export function Workspace({ path }: { path: string[] }) {
             <LayoutDashboard size={18} />
             Audition dashboard
           </a>
-          {cycle?.mode === 'DELIBERATION' && (
+          {cycle?.deliberation_active && (
             <a
               className={page === 'deliberation' ? 'active' : ''}
               href={`/deliberation?cycle=${cycle.id}`}
@@ -461,29 +461,39 @@ export function Workspace({ path }: { path: string[] }) {
               ) : (
                 <>
                   {showNew && newCandidate}
-                  <div className="stats">
-                    <div>
-                      <span>Total candidates</span>
-                      <b>{s.candidates.filter((c) => !c.excluded).length}</b>
-                    </div>
-                    <div>
-                      <span>Up next</span>
-                      <b>
-                        {s.candidates.filter((c) => !c.excluded && c.state === 'UPCOMING').length}
-                      </b>
-                    </div>
-                    <div>
-                      <span>Completed</span>
-                      <b>
-                        {s.candidates.filter((c) => !c.excluded && c.state === 'COMPLETED').length}
-                      </b>
-                    </div>
-                    <div>
-                      <span>Mode</span>
-                      <b className="mode-text">
-                        {cycle.mode === 'AUDITION' ? 'Live auditions' : 'Deliberation'}
-                      </b>
-                    </div>
+                  <div className="stats compact-summary" aria-label="Audition summary">
+                    {[
+                      ['Total', s.candidates.filter((c) => !c.excluded).length],
+                      [
+                        'S',
+                        s.candidates.filter((c) => !c.excluded && c.primary_section === 'Soprano')
+                          .length,
+                      ],
+                      [
+                        'A',
+                        s.candidates.filter((c) => !c.excluded && c.primary_section === 'Alto')
+                          .length,
+                      ],
+                      [
+                        'T',
+                        s.candidates.filter((c) => !c.excluded && c.primary_section === 'Tenor')
+                          .length,
+                      ],
+                      [
+                        'B',
+                        s.candidates.filter((c) => !c.excluded && c.primary_section === 'Bass')
+                          .length,
+                      ],
+                      [
+                        'Unknown',
+                        s.candidates.filter((c) => !c.excluded && !c.primary_section).length,
+                      ],
+                    ].map(([label, count]) => (
+                      <div key={String(label)}>
+                        <span>{label}</span>
+                        <b>{count}</b>
+                      </div>
+                    ))}
                   </div>
                   <section className="now-playing">
                     <div>
@@ -515,12 +525,14 @@ export function Workspace({ path }: { path: string[] }) {
                           {showExcluded ? 'Show audition queue' : 'View excluded'}
                         </button>
                       )}
-                      {admin && cycle.mode === 'AUDITION' && (
+                      {admin && (
                         <button
                           onClick={() => void act('deliberate', { cycleId: cycle.id })}
                           disabled={busy}
                         >
-                          Start Deliberations
+                          {cycle.deliberation_active
+                            ? 'Deactivate Deliberation'
+                            : 'Activate Deliberation'}
                         </button>
                       )}
                       {(admin || s.unlocked) && (
@@ -571,7 +583,9 @@ export function Workspace({ path }: { path: string[] }) {
                 {s.cycles.map((c) => (
                   <section className="panel cycle-row" key={c.id}>
                     <h3>{c.name}</h3>
-                    <span>{c.mode}</span>
+                    <span>
+                      {c.deliberation_active ? 'Deliberation active' : 'Audition available'}
+                    </span>
                     {c.is_active ? (
                       <span className="badge green">Active</span>
                     ) : (
@@ -733,7 +747,7 @@ export function Workspace({ path }: { path: string[] }) {
                   <EvaluationEditor key={id} id={id} evaluation={detail.own} />
                 </>
               )}
-              {cycle?.mode === 'DELIBERATION' && (
+              {cycle?.deliberation_active && (
                 <a className="button" href={`/deliberation/${id}`}>
                   Open deliberation workspace
                 </a>
@@ -741,7 +755,7 @@ export function Workspace({ path }: { path: string[] }) {
             </>
           )}
           {page === 'deliberation' &&
-            (cycle?.mode !== 'DELIBERATION' ? (
+            (!cycle?.deliberation_active ? (
               <section className="panel empty">
                 <h2>Deliberation hasn’t started</h2>
                 <p>An admin can start it from the dashboard.</p>

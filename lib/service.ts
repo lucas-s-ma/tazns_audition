@@ -5,6 +5,7 @@ import {
   canReadDetails,
   canViewCandidate,
   canViewPeerOverall,
+  isDeliberation,
   validateField,
   type Candidate,
   type CandidateDetail,
@@ -45,7 +46,7 @@ export async function getSnapshot(cycleId?: string): Promise<Snapshot> {
   check(users.error);
   const candidates = cycle ? await getCandidates(cycle.id, s.user.is_admin || s.unlocked) : [];
   let team: Snapshot['team'] = [];
-  if (cycle && (cycle.mode === 'DELIBERATION' || s.unlocked) && candidates.length) {
+  if (cycle && (isDeliberation(cycle) || s.unlocked) && candidates.length) {
     const r = await client
       .from('team_deliberations')
       .select('*')
@@ -163,6 +164,15 @@ export async function mutate(operation: string, payload: Record<string, unknown>
     }
     default:
       throw new Error('Unknown operation');
+  }
+  if (operation === 'deliberate') {
+    const { data, error } = await db().rpc('toggle_deliberation', {
+      actor_id: s.user.id,
+      cycle_id: z.uuid().parse(payload.cycleId),
+      active: z.boolean().parse(payload.active),
+    });
+    check(error);
+    return data;
   }
   const { data, error } = await db().rpc('mutate', { actor_id: s.user.id, operation, payload });
   check(error);

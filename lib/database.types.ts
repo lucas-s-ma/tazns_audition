@@ -37,6 +37,10 @@ export interface Database {
         Args: { actor_id: string; operation: string; payload: Record<string, unknown> };
         Returns: unknown;
       };
+      toggle_deliberation: {
+        Args: { actor_id: string; cycle_id: string; active: boolean };
+        Returns: unknown;
+      };
       login_identity: { Args: { normalized_name: string }; Returns: User };
       consume_unlock_attempt: { Args: { session_hash: string }; Returns: boolean };
     };
