@@ -200,7 +200,7 @@ p {
 }
 .privacy-note svg {
   flex-shrink: 0;
-  color: #8b9790;
+  color: #71839a;
 }
 .privacy-note p {
   font-size: 11px;
@@ -249,7 +249,7 @@ p {
   justify-content: space-between;
   align-items: center;
   font-size: 12px;
-  color: #68746c;
+  color: #617792;
 }
 .slash {
   margin: 0 12px;
@@ -415,7 +415,7 @@ p {
   border: 0;
 }
 .order {
-  color: #8b9690;
+  color: #71839a;
   font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
@@ -428,7 +428,7 @@ p {
   font-weight: 600;
 }
 .candidate-name span {
-  color: #8c9690;
+  color: #71839a;
   font-size: 11px;
 }
 .state {
@@ -437,7 +437,7 @@ p {
   border-radius: 4px;
   padding: 5px 8px;
   background: #f0f2f0;
-  color: #7b877e;
+  color: #617792;
 }
 .state.vocal_audition,
 .state.personal_info {
@@ -631,7 +631,7 @@ p {
 .save-state {
   display: block;
   font-size: 10px;
-  color: #6b8a72;
+  color: #55749b;
   min-height: 15px;
 }
 .save-state.error {
@@ -650,7 +650,7 @@ p {
   font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #7d897d;
+  color: #617792;
   background: #edf3fb;
   border-radius: 4px;
   padding: 4px 8px;
@@ -731,7 +731,7 @@ p {
 .matrix th {
   background: white;
   text-align: left;
-  color: #6b7972;
+  color: #617792;
   font-size: 10px;
   min-width: 90px;
 }
@@ -891,7 +891,7 @@ footer {
   padding: 20px 40px;
   border-top: 1px solid var(--line);
   font-size: 10px;
-  color: #8c968e;
+  color: #617792;
   display: flex;
   justify-content: space-between;
 }
