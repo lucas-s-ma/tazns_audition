@@ -14,7 +14,7 @@ import {
   CalendarDays,
 } from 'lucide-react';
 import { api, write } from '@/lib/client';
-import { type Snapshot, type CandidateDetail, type Candidate } from '@/lib/domain';
+import { sections, type Snapshot, type CandidateDetail, type Candidate } from '@/lib/domain';
 import { Realtime } from './realtime';
 import { Profile } from './profile';
 import { EvaluationEditor, Matrix } from './review';
@@ -209,6 +209,20 @@ export function Workspace({ path }: { path: string[] }) {
   const username = (uid: string | null) =>
     s.users.find((u) => u.id === uid)?.display_name ?? 'Unknown';
   const admin = s.user.is_admin;
+  const visibleCandidates = s.candidates.filter((candidate) => !candidate.excluded);
+  const assignedSections = (candidate: Candidate) =>
+    Array.from(
+      new Set(
+        [candidate.primary_section, candidate.secondary_section].filter(
+          (section): section is (typeof sections)[number] => Boolean(section) && section !== 'None',
+        ),
+      ),
+    );
+  const sectionCount = (section: (typeof sections)[number]) =>
+    visibleCandidates.reduce((total, candidate) => {
+      const assigned = assignedSections(candidate);
+      return total + (assigned.includes(section) ? 1 / assigned.length : 0);
+    }, 0);
   const newCandidate = (
     <form
       className="inline-form panel"
@@ -434,7 +448,6 @@ export function Workspace({ path }: { path: string[] }) {
                 <div>
                   <span className="eyebrow">LISTEN. CONNECT. DISCOVER.</span>
                   <h1>Audition dashboard</h1>
-                  <p>A space for every voice. A clear view of what’s next.</p>
                 </div>
                 {admin && cycle && (
                   <button className="primary" onClick={() => setShowNew(true)}>
@@ -462,30 +475,16 @@ export function Workspace({ path }: { path: string[] }) {
                   {showNew && newCandidate}
                   <div className="stats compact-summary" aria-label="Audition summary">
                     {[
-                      ['Total', s.candidates.filter((c) => !c.excluded).length],
-                      [
-                        'S',
-                        s.candidates.filter((c) => !c.excluded && c.primary_section === 'Soprano')
-                          .length,
-                      ],
-                      [
-                        'A',
-                        s.candidates.filter((c) => !c.excluded && c.primary_section === 'Alto')
-                          .length,
-                      ],
-                      [
-                        'T',
-                        s.candidates.filter((c) => !c.excluded && c.primary_section === 'Tenor')
-                          .length,
-                      ],
-                      [
-                        'B',
-                        s.candidates.filter((c) => !c.excluded && c.primary_section === 'Bass')
-                          .length,
-                      ],
+                      ['Total', visibleCandidates.length],
+                      ['S', sectionCount('Soprano')],
+                      ['A', sectionCount('Alto')],
+                      ['T', sectionCount('Tenor')],
+                      ['B', sectionCount('Bass')],
                       [
                         'Unknown',
-                        s.candidates.filter((c) => !c.excluded && !c.primary_section).length,
+                        visibleCandidates.filter(
+                          (candidate) => assignedSections(candidate).length === 0,
+                        ).length,
                       ],
                     ].map(([label, count]) => (
                       <div key={String(label)}>
@@ -908,7 +907,7 @@ export function Workspace({ path }: { path: string[] }) {
           )}
         </main>
         <footer>
-          Temptasians · Duke University <span>Independent listening. Thoughtful deliberation.</span>
+          Temptasians · Duke University <span>Made by Lucas M. with 💙 and Codex</span>
         </footer>
       </div>
       {unlock && (
