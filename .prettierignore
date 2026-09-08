@@ -1,0 +1,9 @@
+node_modules
+.next
+package-lock.json
+supabase/migrations
+scripts/restore-access.sql
+test-results
+playwright-report
+*.tsbuildinfo
+next-env.d.ts
