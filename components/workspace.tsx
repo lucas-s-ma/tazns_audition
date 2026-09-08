@@ -599,6 +599,38 @@ export function Workspace({ path }: { path: string[] }) {
                     <a href={`/?cycle=${c.id}`}>View</a>
                   </section>
                 ))}
+                <section className="panel judge-accounts">
+                  <div className="section-heading">
+                    <div>
+                      <span className="eyebrow">COUNCIL ACCESS</span>
+                      <h2>Judge Accounts</h2>
+                      <p>Excluded judges’ notes remain visible only to admins.</p>
+                    </div>
+                  </div>
+                  <div className="judge-account-list">
+                    {s.users.map((user) => (
+                      <div className="judge-account-row" key={user.id}>
+                        <span>
+                          <b>{user.display_name}</b>
+                          {user.is_admin ? ' · Admin' : user.excluded ? ' · Excluded' : ''}
+                        </span>
+                        {!user.is_admin && (
+                          <button
+                            disabled={busy}
+                            onClick={() =>
+                              void act('setJudgeExclusion', {
+                                id: user.id,
+                                excluded: !user.excluded,
+                              })
+                            }
+                          >
+                            {user.excluded ? 'Restore judge' : 'Exclude judge'}
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </section>
               </>
             ) : (
               <p>Cycle management requires an admin.</p>
@@ -643,7 +675,10 @@ export function Workspace({ path }: { path: string[] }) {
                         >
                           <option value="">Choose a connected council member</option>
                           {s.users
-                            .filter((u) => Date.parse(u.last_seen_at) > Date.now() - 300000)
+                            .filter(
+                              (u) =>
+                                !u.excluded && Date.parse(u.last_seen_at) > Date.now() - 300000,
+                            )
                             .map((u) => (
                               <option key={u.id} value={u.id}>
                                 {u.display_name}
@@ -958,7 +993,13 @@ export function Workspace({ path }: { path: string[] }) {
                     <Matrix
                       evaluations={detail.team ? [{ ...detail.team, judge_user_id: 'team' }] : []}
                       users={[
-                        { id: 'team', display_name: 'Team', is_admin: false, last_seen_at: '' },
+                        {
+                          id: 'team',
+                          display_name: 'Team',
+                          is_admin: false,
+                          excluded: false,
+                          last_seen_at: '',
+                        },
                       ]}
                     />
                   </>

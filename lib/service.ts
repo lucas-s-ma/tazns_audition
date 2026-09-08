@@ -63,7 +63,7 @@ export async function getSnapshot(cycleId?: string): Promise<Snapshot> {
     cycles: cycles.data ?? [],
     cycle,
     candidates,
-    users: users.data ?? [],
+    users: (users.data ?? []).filter((user) => s.user.is_admin || !user.excluded),
     team,
   };
 }
@@ -76,13 +76,17 @@ export async function getCandidate(id: string): Promise<CandidateDetail> {
   if (!c || !canViewCandidate(s.user, c, s.unlocked)) throw new Error('Candidate unavailable');
   const cycle = await getActiveCycle(c.audition_cycle_id);
   if (!cycle) throw new Error('Cycle unavailable');
-  const own = await client
-    .from('evaluations')
-    .select('*')
-    .eq('candidate_id', id)
-    .eq('judge_user_id', s.user.id)
-    .maybeSingle();
-  check(own.error);
+  let own: CandidateDetail['own'] = null;
+  if (!s.user.excluded) {
+    const ownEvaluation = await client
+      .from('evaluations')
+      .select('*')
+      .eq('candidate_id', id)
+      .eq('judge_user_id', s.user.id)
+      .maybeSingle();
+    check(ownEvaluation.error);
+    own = ownEvaluation.data;
+  }
   let peers: CandidateDetail['peers'] = [],
     overalls: CandidateDetail['overalls'] = [],
     team: CandidateDetail['team'] = null;
@@ -94,6 +98,12 @@ export async function getCandidate(id: string): Promise<CandidateDetail> {
     check(results[0].error);
     check(results[1].error);
     peers = results[0].data ?? [];
+    if (!s.user.is_admin) {
+      const activeJudges = await client.from('users').select('id').eq('excluded', false);
+      check(activeJudges.error);
+      const activeJudgeIds = new Set((activeJudges.data ?? []).map((judge) => judge.id));
+      peers = peers.filter((evaluation) => activeJudgeIds.has(evaluation.judge_user_id!));
+    }
     team = results[1].data;
   } else if (canViewPeerOverall(c)) {
     // Never fetch peer notes or component ratings for an unauthorized viewer.
@@ -106,11 +116,18 @@ export async function getCandidate(id: string): Promise<CandidateDetail> {
       judge_user_id: r.judge_user_id!,
       overall_rating: r.overall_rating,
     }));
+    if (!s.user.is_admin) {
+      const activeJudges = await client.from('users').select('id').eq('excluded', false);
+      check(activeJudges.error);
+      const activeJudgeIds = new Set((activeJudges.data ?? []).map((judge) => judge.id));
+      overalls = overalls.filter((evaluation) => activeJudgeIds.has(evaluation.judge_user_id));
+    }
   }
-  return { candidate: c, cycle, own: own.data, peers, overalls, team };
+  return { candidate: c, cycle, own, peers, overalls, team };
 }
 export async function mutate(operation: string, payload: Record<string, unknown>) {
   const s = await session();
+  if (s.user.excluded && !s.user.is_admin) throw new Error('Judge account is excluded');
   const id = () => z.uuid().parse(payload.id);
   switch (operation) {
     case 'createCycle':
@@ -118,6 +135,9 @@ export async function mutate(operation: string, payload: Record<string, unknown>
       break;
     case 'activateCycle':
       payload = { id: id() };
+      break;
+    case 'setJudgeExclusion':
+      payload = { id: id(), excluded: z.boolean().parse(payload.excluded) };
       break;
     case 'createCandidate':
       payload = {
@@ -177,16 +197,25 @@ export async function mutate(operation: string, payload: Record<string, unknown>
     check(error);
     return data;
   }
+  if (operation === 'setJudgeExclusion') {
+    const { data, error } = await db().rpc('set_judge_excluded', {
+      actor_id: s.user.id,
+      judge_id: z.uuid().parse(payload.id),
+      excluded: z.boolean().parse(payload.excluded),
+    });
+    check(error);
+    return data;
+  }
   const { data, error } = await db().rpc('mutate', { actor_id: s.user.id, operation, payload });
   check(error);
   return data;
 }
-export async function exportDataset(cycleId: string, includeExcluded = false) {
+export async function exportDataset(cycleId: string, includeAll = false) {
   const s = await session();
   if (!s.user.is_admin) throw new Error('Admin required for export');
   const cycle = await getActiveCycle(cycleId);
   if (!cycle) throw new Error('Cycle unavailable');
-  const candidates = await getCandidates(cycle.id, includeExcluded),
+  const candidates = await getCandidates(cycle.id, includeAll),
     client = db();
   // Batch to avoid PostgREST URL length and row-limit issues for large historical cycles.
   const evaluations: CandidateDetail['peers'] = [],
@@ -202,7 +231,9 @@ export async function exportDataset(cycleId: string, includeExcluded = false) {
     evaluations.push(...(e.data ?? []));
     team.push(...(t.data ?? []));
   }
-  const users = await client.from('users').select('*').order('display_name');
+  let usersQuery = client.from('users').select('*').order('display_name');
+  if (!includeAll) usersQuery = usersQuery.eq('excluded', false);
+  const users = await usersQuery;
   check(users.error);
   return { cycle, candidates, evaluations, team, users: users.data ?? [] };
 }

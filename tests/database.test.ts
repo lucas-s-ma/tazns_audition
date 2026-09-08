@@ -18,6 +18,7 @@ beforeAll(async () => {
   await pg.exec(
     sql.replace('alter publication supabase_realtime add table public.change_signal;', ''),
   );
+  await pg.exec(await readFile('supabase/migrations/202609080003_judge_exclusion.sql', 'utf8'));
 });
 afterAll(async () => {
   await pg.close();
@@ -56,6 +57,18 @@ describe('real PostgreSQL migration and procedure boundary', () => {
     await query("select login_identity('Alice')");
     expect((await query('select * from users where id=$1', [alice])).length).toBe(1);
     expect((await query('select * from users')).length).toBe(3);
+  });
+  it('allows admins to exclude judges but protects admin accounts', async () => {
+    await query('select set_judge_excluded($1,$2,true)', [lucas, alice]);
+    expect(
+      (await query<{ excluded: boolean }>('select excluded from users where id=$1', [alice]))[0],
+    ).toEqual({ excluded: true });
+    await expect(query('select set_judge_excluded($1,$2,true)', [alice, ben])).rejects.toThrow(
+      'Admin',
+    );
+    await expect(query('select set_judge_excluded($1,$2,true)', [lucas, lucas])).rejects.toThrow(
+      'Admin accounts',
+    );
   });
   it('allows only one active cycle', async () => {
     await expect(

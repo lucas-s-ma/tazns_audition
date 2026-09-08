@@ -13,6 +13,7 @@ const f = vi.hoisted(() => ({
     state: 'VOCAL_AUDITION',
     excluded: false,
   } as Candidate,
+  peerExcluded: false,
   queries: [] as { table: string; columns: string; filters: Record<string, unknown> }[],
 }));
 vi.mock('@/lib/session', () => ({ session: async () => f.viewer }));
@@ -31,6 +32,14 @@ vi.mock('@/lib/supabase', () => ({
             : query.columns === 'judge_user_id,overall_rating'
               ? [{ judge_user_id: 'peer', overall_rating: 'GREEN' }]
               : [{ judge_user_id: 'peer', solo_notes: 'Peer secret', overall_rating: 'GREEN' }];
+        else if (table === 'users')
+          data = [
+            { id: f.viewer.user.id, excluded: f.viewer.user.excluded },
+            { id: 'peer', excluded: f.peerExcluded },
+          ].filter(
+            (user) =>
+              query.filters.excluded === undefined || user.excluded === query.filters.excluded,
+          );
         return { data, error: null };
       };
       const builder = {
@@ -55,6 +64,8 @@ beforeEach(() => {
   f.queries.length = 0;
   f.viewer.unlocked = false;
   f.viewer.user.is_admin = false;
+  f.viewer.user.excluded = false;
+  f.peerExcluded = false;
   f.cycle.mode = 'AUDITION';
   f.candidate.state = 'VOCAL_AUDITION';
   f.candidate.excluded = false;
@@ -95,6 +106,21 @@ it('unlock returns details without changing admin flag', async () => {
   f.viewer.unlocked = true;
   expect((await getCandidate(f.candidate.id)).peers[0].solo_notes).toBe('Peer secret');
   expect(f.viewer.user.is_admin).toBe(false);
+});
+it('never returns excluded judge notes to a non-admin viewer', async () => {
+  f.cycle.mode = 'DELIBERATION';
+  f.peerExcluded = true;
+  const data = await getCandidate(f.candidate.id);
+  expect(data.peers).toEqual([]);
+  expect(JSON.stringify(data)).not.toContain('Peer secret');
+  f.viewer.user.is_admin = true;
+  expect((await getCandidate(f.candidate.id)).peers[0].solo_notes).toBe('Peer secret');
+});
+it('does not return an excluded judge’s own notes', async () => {
+  f.viewer.user.excluded = true;
+  const data = await getCandidate(f.candidate.id);
+  expect(data.own).toBeNull();
+  expect(f.queries.some((query) => query.table === 'evaluations')).toBe(false);
 });
 it('excluded candidate is rejected before evaluation queries', async () => {
   f.candidate.excluded = true;

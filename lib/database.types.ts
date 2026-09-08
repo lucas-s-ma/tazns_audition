@@ -41,6 +41,10 @@ export interface Database {
         Args: { actor_id: string; cycle_id: string; active: boolean };
         Returns: unknown;
       };
+      set_judge_excluded: {
+        Args: { actor_id: string; judge_id: string; excluded: boolean };
+        Returns: unknown;
+      };
       login_identity: { Args: { normalized_name: string }; Returns: User };
       consume_unlock_attempt: { Args: { session_hash: string }; Returns: boolean };
     };

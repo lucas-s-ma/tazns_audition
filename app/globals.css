@@ -446,6 +446,27 @@ p {
   border-radius: 9px;
   overflow: hidden;
 }
+.judge-account-list {
+  border-top: 1px solid var(--line);
+}
+.judge-account-row {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  font-size: 12px;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+.judge-account-row:last-child {
+  border-bottom: 0;
+}
+.judge-account-row b {
+  font-size: 13px;
+}
+.judge-account-row button {
+  font-size: 11px;
+  padding: 6px 9px;
+}
 .candidate-row {
   padding: 19px 22px;
   display: flex;

@@ -30,6 +30,7 @@ export interface User {
   id: string;
   display_name: string;
   is_admin: boolean;
+  excluded: boolean;
   last_seen_at: string;
 }
 export interface Cycle {
