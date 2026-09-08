@@ -556,6 +556,9 @@ p {
   gap: 24px;
   align-items: stretch;
 }
+.review-grid .panel {
+  margin-bottom: 0;
+}
 .sticky {
   position: sticky;
   top: 22px;
