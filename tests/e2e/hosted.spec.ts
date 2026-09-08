@@ -122,15 +122,13 @@ test('two real identities: durable autosave, privacy, realtime workflow, board a
     await alice.goto('/deliberation');
     await lucas.goto('/deliberation');
     await expect(alice.getByRole('link', { name: 'Upcoming Singer' })).toBeVisible();
-    await alice.getByRole('combobox', { name: 'Move Verification Singer' }).selectOption('Alto');
-    await expect(lucas.getByRole('combobox', { name: 'Move Verification Singer' })).toHaveValue(
-      'Alto',
-      { timeout: 10000 },
-    );
+    await mutate(a, 'move', { id: c.id, status: 'ACCEPTED', section: 'Alto' });
+    const altoLane = lucas.locator('.board-lane').filter({ hasText: 'Alto' });
+    await expect(altoLane.getByRole('link', { name: 'Verification Singer' })).toBeVisible({
+      timeout: 10000,
+    });
     await lucas.reload();
-    await expect(lucas.getByRole('combobox', { name: 'Move Verification Singer' })).toHaveValue(
-      'Alto',
-    );
+    await expect(altoLane.getByRole('link', { name: 'Verification Singer' })).toBeVisible();
     await mutate(b, 'patch', { id: c.id, target: 'team', field: 'overall_rating', value: 'RED' });
     await expect(
       lucas

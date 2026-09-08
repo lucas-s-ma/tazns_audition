@@ -845,10 +845,12 @@ p {
   z-index: 100;
   box-shadow: 0 8px 20px #0002;
 }
-.card-top {
+.card-heading {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 .drag-handle {
   border: 0;
@@ -858,8 +860,9 @@ p {
   cursor: grab;
 }
 .card-name {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
+  line-height: 1.25;
 }
 .board-card p {
   font-size: 10px;
@@ -874,11 +877,6 @@ p {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 4px;
-}
-.board-card select {
-  font-size: 10px;
-  padding: 6px 3px;
-  margin-top: 10px;
 }
 .drop-hint {
   font-size: 10px;

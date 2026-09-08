@@ -13,15 +13,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
 import { ratingLabel, sections, type Candidate, type Evaluation } from '@/lib/domain';
 const lanes = ['UNDECIDED', ...sections, 'REJECTED'];
-function Card({
-  candidate: c,
-  team,
-  onMove,
-}: {
-  candidate: Candidate;
-  team?: Evaluation;
-  onMove: (id: string, lane: string) => void;
-}) {
+function Card({ candidate: c, team }: { candidate: Candidate; team?: Evaluation }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: c.id });
   return (
     <article
@@ -29,8 +21,10 @@ function Card({
       className={`board-card ${isDragging ? 'dragging' : ''}`}
       style={{ transform: CSS.Translate.toString(transform) }}
     >
-      <div className="card-top">
-        <span className="order">{String(c.audition_order).padStart(2, '0')}</span>
+      <div className="card-heading">
+        <a href={`/deliberation/${c.id}`} className="card-name">
+          {c.first_name} {c.last_name}
+        </a>
         <button
           {...attributes}
           {...listeners}
@@ -40,9 +34,6 @@ function Card({
           <GripVertical size={18} />
         </button>
       </div>
-      <a href={`/deliberation/${c.id}`} className="card-name">
-        {c.first_name} {c.last_name}
-      </a>
       <p>
         {c.class_year ?? 'Class unset'} · {c.mbti.replaceAll('_', '·')}
       </p>
@@ -62,17 +53,6 @@ function Card({
       <div className={`team-overall saturated ${team?.overall_rating?.toLowerCase() ?? 'grey'}`}>
         Team Overall <b>{ratingLabel(team?.overall_rating ?? null)}</b>
       </div>
-      <select
-        aria-label={`Move ${c.first_name} ${c.last_name}`}
-        value={c.deliberation_status === 'ACCEPTED' ? c.accepted_section! : c.deliberation_status}
-        onChange={(e) => onMove(c.id, e.target.value)}
-      >
-        {lanes.map((l) => (
-          <option key={l} value={l}>
-            {l === 'UNDECIDED' ? 'Undecided' : l === 'REJECTED' ? 'Rejected' : `Accepted / ${l}`}
-          </option>
-        ))}
-      </select>
     </article>
   );
 }
@@ -80,12 +60,10 @@ function Lane({
   lane,
   candidates,
   team,
-  onMove,
 }: {
   lane: string;
   candidates: Candidate[];
   team: Evaluation[];
-  onMove: (id: string, lane: string) => void;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: lane });
   return (
@@ -95,12 +73,7 @@ function Lane({
         <span>{candidates.length}</span>
       </h3>
       {candidates.map((c) => (
-        <Card
-          key={c.id}
-          candidate={c}
-          team={team.find((t) => t.candidate_id === c.id)}
-          onMove={onMove}
-        />
+        <Card key={c.id} candidate={c} team={team.find((t) => t.candidate_id === c.id)} />
       ))}
       {!candidates.length && <p className="drop-hint">Drop a candidate here</p>}
     </section>
@@ -137,7 +110,6 @@ export function Board({
                   : c.deliberation_status === l),
             )}
             team={team}
-            onMove={onMove}
           />
         ))}
       </div>
