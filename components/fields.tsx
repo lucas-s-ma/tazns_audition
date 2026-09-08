@@ -138,6 +138,7 @@ export function TextField({
   label,
   area = false,
   required = false,
+  placeholder,
 }: {
   id: string;
   target: 'profile' | 'evaluation' | 'team';
@@ -146,6 +147,7 @@ export function TextField({
   label: string;
   area?: boolean;
   required?: boolean;
+  placeholder?: string;
 }) {
   const s = useField(id, target, field, value);
   return (
@@ -160,7 +162,7 @@ export function TextField({
           value={s.value}
           onChange={(e) => s.set(e.target.value)}
           onBlur={() => void s.flush()}
-          placeholder="What are you hearing? Capture specifics…"
+          placeholder={placeholder ?? 'What are you hearing? Capture specifics…'}
         />
       ) : (
         <input

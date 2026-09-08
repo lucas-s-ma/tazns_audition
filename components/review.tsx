@@ -48,6 +48,11 @@ export function EvaluationEditor({
         value={e[`${cat}_notes`]}
         label={`${labels[cat]} notes`}
         area
+        placeholder={
+          cat === 'vibe'
+            ? 'Note down your first impressions, cultural fit, and any other behavioral notes you want to capture.'
+            : undefined
+        }
       />
     </>
   );
@@ -69,15 +74,7 @@ export function EvaluationEditor({
             </section>
           ))}
         </div>
-        {!compact && (
-          <aside className="panel sticky vibe">
-            {pane('vibe')}
-            <p className="muted small">
-              Note down your first impressions, cultural fit, and any other behavioral notes you
-              want to capture.
-            </p>
-          </aside>
-        )}
+        {!compact && <aside className="panel sticky vibe">{pane('vibe')}</aside>}
       </div>
       <div className="rating-summary">
         {categories.map((cat) => (
