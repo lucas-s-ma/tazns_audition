@@ -42,14 +42,6 @@ function Card({ candidate: c, team }: { candidate: Candidate; team?: Evaluation 
         <br />
         Secondary: {c.secondary_section ?? 'Unset'}
       </p>
-      <p>
-        {[
-          c.origin_1 === 'Other' ? c.origin_1_other : c.origin_1,
-          c.origin_2 === 'Other' ? c.origin_2_other : c.origin_2 === 'None' ? null : c.origin_2,
-        ]
-          .filter(Boolean)
-          .join(' / ') || 'Origin unset'}
-      </p>
       <div className={`team-overall saturated ${team?.overall_rating?.toLowerCase() ?? 'grey'}`}>
         Team Overall <b>{ratingLabel(team?.overall_rating ?? null)}</b>
       </div>
