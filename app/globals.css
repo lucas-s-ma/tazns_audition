@@ -205,6 +205,7 @@ p {
 .privacy-note p {
   font-size: 11px;
   line-height: 1.7;
+  color: #536b88;
 }
 .identity {
   display: flex;
@@ -214,11 +215,12 @@ p {
 }
 .identity b {
   font-size: 12px;
+  color: #172b4d;
 }
 .identity div > span {
   display: block;
   font-size: 10px;
-  color: var(--muted);
+  color: #627895;
 }
 .identity button {
   margin-left: auto;
@@ -230,7 +232,8 @@ p {
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: #e9ece6;
+  background: #e5eef9;
+  color: #18558c;
   font-size: 13px;
   width: 34px;
   height: 34px;
