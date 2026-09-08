@@ -2,7 +2,7 @@
 import { useEffect, useReducer, useRef } from 'react';
 import { FieldQueue } from '@/lib/autosave';
 import { write } from '@/lib/client';
-import { type Rating } from '@/lib/domain';
+import { ratingLabels, type Rating } from '@/lib/domain';
 const pending = new Set<FieldQueue<unknown>>();
 // Retain unsaved queues across realtime-driven unmounts (e.g. exclusion/restoration).
 const retained = new Map<string, FieldQueue<unknown>>();
@@ -103,7 +103,7 @@ export function RatingSelector({
           onClick={() => onChange(r)}
         >
           <span className="dot" />
-          {r === null ? 'Unset' : r[0] + r.slice(1).toLowerCase()}
+          {r === null ? 'Unset' : ratingLabels[r]}
         </button>
       ))}
     </div>

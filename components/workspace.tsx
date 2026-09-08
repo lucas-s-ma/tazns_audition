@@ -14,7 +14,13 @@ import {
   CalendarDays,
 } from 'lucide-react';
 import { api, write } from '@/lib/client';
-import { sections, type Snapshot, type CandidateDetail, type Candidate } from '@/lib/domain';
+import {
+  ratingLabel,
+  sections,
+  type Snapshot,
+  type CandidateDetail,
+  type Candidate,
+} from '@/lib/domain';
 import { Realtime } from './realtime';
 import { Profile } from './profile';
 import { EvaluationEditor, Matrix } from './review';
@@ -706,7 +712,7 @@ export function Workspace({ path }: { path: string[] }) {
                   </details>
                   {detail.candidate.state === 'COMPLETED' && (
                     <section className="panel">
-                      <h3>Council Overall colors</h3>
+                      <h3>Council Overall Ratings</h3>
                       <div className="overall-list">
                         {s.users.map((u) => (
                           <span key={u.id}>
@@ -714,11 +720,13 @@ export function Workspace({ path }: { path: string[] }) {
                             <b
                               className={`badge ${(detail.overalls.find((e) => e.judge_user_id === u.id)?.overall_rating ?? detail.peers.find((e) => e.judge_user_id === u.id)?.overall_rating)?.toLowerCase() ?? 'grey'}`}
                             >
-                              {detail.overalls.find((e) => e.judge_user_id === u.id)
-                                ?.overall_rating ??
-                                detail.peers.find((e) => e.judge_user_id === u.id)
+                              {ratingLabel(
+                                detail.overalls.find((e) => e.judge_user_id === u.id)
                                   ?.overall_rating ??
-                                'UNSET'}
+                                  detail.peers.find((e) => e.judge_user_id === u.id)
+                                    ?.overall_rating ??
+                                  null,
+                              )}
                             </b>
                           </span>
                         ))}

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import {
   categories,
   labels,
+  ratingLabel,
   emptyEvaluation,
   type Category,
   type Evaluation,
@@ -79,7 +80,7 @@ export function EvaluationEditor({
           <span key={cat}>
             {labels[cat]}{' '}
             <b className={`badge ${e[`${cat}_rating`]?.toLowerCase() ?? 'grey'}`}>
-              {e[`${cat}_rating`] ?? 'UNSET'}
+              {ratingLabel(e[`${cat}_rating`])}
             </b>
           </span>
         ))}
@@ -110,7 +111,7 @@ export function Matrix({ evaluations, users }: { evaluations: Evaluation[]; user
                     key={c}
                     className={`${e?.[`${c}_rating`]?.toLowerCase() ?? 'grey'} ${c === 'overall' ? 'saturated' : ''}`}
                   >
-                    <b>{e?.[`${c}_rating`] ?? 'UNSET'}</b>
+                    <b>{ratingLabel(e?.[`${c}_rating`] ?? null)}</b>
                     <p>{e?.[`${c}_notes`] || '—'}</p>
                   </td>
                 ))}

@@ -52,9 +52,9 @@ The Access All Data option provides temporary read access to the complete datase
 
 ## Ratings
 
-- Green: strong positive opinion; very good or happy to see this candidate.
-- Yellow: neutral, mixed, or acceptable.
-- Red: strong negative opinion.
+- Good: strong positive opinion; very good or happy to see this candidate.
+- Medium: neutral, mixed, or acceptable.
+- Weak: strong negative opinion.
 - Grey/Unset: no rating entered yet.
 
 Ratings are labeled in the interface as well as shown by color. Overall colors are emphasized during deliberation so the council’s final opinions are easy to scan.

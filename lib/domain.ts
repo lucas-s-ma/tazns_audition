@@ -11,6 +11,14 @@ export const labels: Record<Category, string> = {
 };
 export const ratingSchema = z.enum(['GREEN', 'YELLOW', 'RED']).nullable();
 export type Rating = z.infer<typeof ratingSchema>;
+export const ratingLabels: Record<NonNullable<Rating>, string> = {
+  GREEN: 'Good',
+  YELLOW: 'Medium',
+  RED: 'Weak',
+};
+export function ratingLabel(rating: Rating) {
+  return rating ? ratingLabels[rating] : 'UNSET';
+}
 export type EvaluationField = `${Category}_rating` | `${Category}_notes`;
 export type Evaluation = {
   candidate_id: string;

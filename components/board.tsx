@@ -11,7 +11,7 @@ import {
 } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical } from 'lucide-react';
-import { sections, type Candidate, type Evaluation } from '@/lib/domain';
+import { ratingLabel, sections, type Candidate, type Evaluation } from '@/lib/domain';
 const lanes = ['UNDECIDED', ...sections, 'REJECTED'];
 function Card({
   candidate: c,
@@ -60,7 +60,7 @@ function Card({
           .join(' / ') || 'Origin unset'}
       </p>
       <div className={`team-overall saturated ${team?.overall_rating?.toLowerCase() ?? 'grey'}`}>
-        Team Overall <b>{team?.overall_rating ?? 'UNSET'}</b>
+        Team Overall <b>{ratingLabel(team?.overall_rating ?? null)}</b>
       </div>
       <select
         aria-label={`Move ${c.first_name} ${c.last_name}`}
