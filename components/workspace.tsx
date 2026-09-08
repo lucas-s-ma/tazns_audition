@@ -495,28 +495,6 @@ export function Workspace({ path }: { path: string[] }) {
                       </div>
                     ))}
                   </div>
-                  <section className="now-playing">
-                    <div>
-                      <span className="eyebrow">
-                        {active ? 'CURRENTLY AUDITIONING' : 'READY WHEN YOU ARE'}
-                      </span>
-                      <h2>
-                        {active
-                          ? `${active.first_name} ${active.last_name}`
-                          : 'The next voice is waiting.'}
-                      </h2>
-                      <p>
-                        {active
-                          ? `${active.state === 'PERSONAL_INFO' ? `Personal Info · ${username(active.note_taker_id)} is taking notes` : 'Vocal Audition · Write your independent review'}`
-                          : 'Open an upcoming candidate to begin their audition.'}
-                      </p>
-                    </div>
-                    {active && (
-                      <a className="button primary" href={`/candidate/${active.id}`}>
-                        Open audition <ArrowRight size={17} />
-                      </a>
-                    )}
-                  </section>
                   <div className="section-heading">
                     <h2>{showExcluded ? 'Excluded candidates' : 'Audition queue'}</h2>
                     <div className="actions">
@@ -527,7 +505,12 @@ export function Workspace({ path }: { path: string[] }) {
                       )}
                       {admin && (
                         <button
-                          onClick={() => void act('deliberate', { cycleId: cycle.id })}
+                          onClick={() =>
+                            void act('deliberate', {
+                              cycleId: cycle.id,
+                              active: !cycle.deliberation_active,
+                            })
+                          }
                           disabled={busy}
                         >
                           {cycle.deliberation_active
