@@ -254,7 +254,7 @@ p {
   flex: 1;
 }
 .topbar {
-  height: 74px;
+  height: 56px;
   background: #ffffffb8;
   border-bottom: 1px solid var(--line);
   padding: 0 40px;
@@ -284,7 +284,7 @@ p {
   background: #418367;
 }
 .content {
-  padding: 39px 40px 60px;
+  padding: 25px 40px 60px;
   max-width: 1800px;
   margin: auto;
   min-height: calc(100vh - 134px);
@@ -293,7 +293,7 @@ p {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 18px;
   gap: 20px;
 }
 .page-heading p {
@@ -321,13 +321,13 @@ p {
   background: white;
   border: 1px solid var(--line);
   border-radius: 9px;
-  padding: 22px 0;
-  margin-bottom: 26px;
+  padding: 14px 0;
+  margin-bottom: 18px;
 }
 .compact-summary {
   grid-template-columns: 1.35fr repeat(5, 1fr);
-  padding: 14px 0;
-  margin-bottom: 26px;
+  padding: 10px 0;
+  margin-bottom: 18px;
 }
 .compact-summary > div {
   padding: 0 18px;
@@ -356,7 +356,7 @@ p {
   margin-bottom: 10px;
 }
 .stats b {
-  font-size: 29px;
+  font-size: 25px;
   font-weight: 500;
   line-height: 1;
 }
