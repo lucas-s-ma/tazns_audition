@@ -49,9 +49,7 @@ export function EvaluationEditor({
         label={`${labels[cat]} notes`}
         area
         placeholder={
-          cat === 'vibe'
-            ? 'Note down your first impressions, cultural fit, and any other behavioral notes you want to capture.'
-            : undefined
+          cat === 'vibe' ? 'First impression, cultural fit, or other behavioral notes…' : undefined
         }
       />
     </>

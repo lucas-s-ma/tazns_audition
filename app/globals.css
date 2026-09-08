@@ -79,7 +79,7 @@ textarea:focus {
   outline-offset: 2px;
 }
 textarea {
-  min-height: 260px;
+  min-height: 156px;
   resize: vertical;
   line-height: 1.7;
 }
@@ -1182,7 +1182,7 @@ footer {
     top: 0;
   }
   .vibe textarea {
-    min-height: 160px;
+    min-height: 96px;
   }
   .review-grid .vibe {
     order: -1;
