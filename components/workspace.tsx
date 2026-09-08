@@ -646,7 +646,7 @@ export function Workspace({ path }: { path: string[] }) {
                   )}
                 </section>
               ) : detail.candidate.state === 'PERSONAL_INFO' ? (
-                <section className="panel">
+                <section className="panel personal-info-panel">
                   <div className="section-heading">
                     <div>
                       <span className="eyebrow">GETTING TO KNOW YOU</span>
@@ -659,6 +659,10 @@ export function Workspace({ path }: { path: string[] }) {
                   {detail.candidate.note_taker_id === s.user.id || admin ? (
                     <>
                       <Profile candidate={detail.candidate} personal />
+                      <p className="personal-info-handoff">
+                        Click Begin Vocal Audition when you are ready; other judges can then begin
+                        taking notes.
+                      </p>
                       <div className="actions">
                         <button
                           className="primary"

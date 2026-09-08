@@ -10,27 +10,25 @@ export function Profile({
 }) {
   return (
     <div className="profile-grid">
-      {(['first_name', 'last_name', 'major', 'hometown', 'celebrity_crush'] as const).map(
-        (field) => (
-          <TextField
-            key={field}
-            id={c.id}
-            target="profile"
-            field={field}
-            value={c[field]}
-            label={
-              {
-                first_name: 'First name',
-                last_name: 'Last name',
-                major: 'Major',
-                hometown: 'Hometown',
-                celebrity_crush: 'Celebrity crush',
-              }[field]
-            }
-            required={personal}
-          />
-        ),
-      )}
+      {(['first_name', 'last_name'] as const).map((field) => (
+        <TextField
+          key={field}
+          id={c.id}
+          target="profile"
+          field={field}
+          value={c[field]}
+          label={
+            {
+              first_name: 'First name',
+              last_name: 'Last name',
+              major: 'Major',
+              hometown: 'Hometown',
+              celebrity_crush: 'Celebrity crush',
+            }[field]
+          }
+          required={personal}
+        />
+      ))}
       <SelectField
         id={c.id}
         field="class_year"
@@ -38,6 +36,23 @@ export function Profile({
         label="Class *"
         options={classes}
       />
+      {(['major', 'hometown', 'celebrity_crush'] as const).map((field) => (
+        <TextField
+          key={field}
+          id={c.id}
+          target="profile"
+          field={field}
+          value={c[field]}
+          label={
+            {
+              major: 'Major',
+              hometown: 'Hometown',
+              celebrity_crush: 'Celebrity crush',
+            }[field]
+          }
+          required={personal}
+        />
+      ))}
       <MbtiField id={c.id} value={c.mbti} />
       {!personal && (
         <>

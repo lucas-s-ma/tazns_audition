@@ -319,6 +319,20 @@ p {
   padding: 25px;
   margin-bottom: 22px;
 }
+.personal-info-panel {
+  background: #e1ebf8;
+  border-color: #bfd1e7;
+}
+.personal-info-panel input,
+.personal-info-panel select {
+  background: #fff;
+  border-color: #b9cce2;
+}
+.personal-info-handoff {
+  color: #3e5f83;
+  font-size: 12px;
+  margin: 8px 0 16px;
+}
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
