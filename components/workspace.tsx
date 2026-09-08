@@ -125,7 +125,7 @@ export function Workspace({ path }: { path: string[] }) {
       <main className="login">
         <div className="login-story">
           <div className="brand">
-            <AudioLines />
+            <img className="brand-logo" src="/logo.jpeg" alt="" />
             <span>
               Temptasians<span className="brand-sub">DUKE UNIVERSITY</span>
             </span>
@@ -321,7 +321,7 @@ export function Workspace({ path }: { path: string[] }) {
     <div className="app-shell">
       <aside className="sidebar">
         <a href="/" className="brand">
-          <AudioLines />
+          <img className="brand-logo" src="/logo.jpeg" alt="" />
           <span>
             Temptasians<span className="brand-sub">AUDITION COUNCIL</span>
           </span>

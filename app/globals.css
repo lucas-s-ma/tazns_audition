@@ -149,6 +149,12 @@ p {
   width: 31px;
   height: 35px;
 }
+.brand-logo {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+  border-radius: 50%;
+}
 .brand-sub {
   display: block;
   font-size: 9px;
@@ -960,18 +966,6 @@ footer {
   flex-direction: column;
   justify-content: space-between;
   min-height: 100vh;
-}
-.login-story::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url('/logo.jpeg') center / min(72%, 560px) no-repeat;
-  opacity: 0.11;
-  pointer-events: none;
-}
-.login-story > * {
-  position: relative;
-  z-index: 1;
 }
 .login-story h1 {
   font-family: 'Ubuntu', Arial, Helvetica, sans-serif;
