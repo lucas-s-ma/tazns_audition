@@ -145,7 +145,7 @@ export function Workspace({ path }: { path: string[] }) {
           <span className="small">Asian cultural a cappella · Duke University</span>
         </div>
         <section className="login-form">
-          <span className="eyebrow">WELCOME TO COUNCIL</span>
+          <span className="eyebrow">WELCOME TO AUDITION COUNCIL</span>
           <h2>Let’s get you settled.</h2>
           <p>
             Enter your first name e.g. Kevin.
