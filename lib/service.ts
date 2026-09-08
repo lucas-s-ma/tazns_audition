@@ -181,13 +181,12 @@ export async function mutate(operation: string, payload: Record<string, unknown>
   check(error);
   return data;
 }
-export async function exportDataset(cycleId: string) {
+export async function exportDataset(cycleId: string, includeExcluded = false) {
   const s = await session();
-  if (!s.user.is_admin && !s.unlocked)
-    throw new Error('Privileged export requires admin or Access All Data');
+  if (!s.user.is_admin) throw new Error('Admin required for export');
   const cycle = await getActiveCycle(cycleId);
   if (!cycle) throw new Error('Cycle unavailable');
-  const candidates = await getCandidates(cycle.id, true),
+  const candidates = await getCandidates(cycle.id, includeExcluded),
     client = db();
   // Batch to avoid PostgREST URL length and row-limit issues for large historical cycles.
   const evaluations: CandidateDetail['peers'] = [],

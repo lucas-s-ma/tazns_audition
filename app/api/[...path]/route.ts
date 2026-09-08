@@ -37,7 +37,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ path
       return json(await getSnapshot(req.nextUrl.searchParams.get('cycle') ?? undefined));
     if (path[0] === 'candidate') return json(await getCandidate(path[1]));
     if (path[0] === 'export') {
-      const data = await exportDataset(path[1]);
+      const includeExcluded = req.nextUrl.searchParams.get('all') === 'true';
+      const data = await exportDataset(path[1], includeExcluded);
       const buffer = await (await buildWorkbook(data)).xlsx.writeBuffer();
       return new NextResponse(new Uint8Array(buffer), {
         headers: {

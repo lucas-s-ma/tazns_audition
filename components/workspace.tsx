@@ -269,7 +269,13 @@ export function Workspace({ path }: { path: string[] }) {
       <div className="candidate-list">
         {items.map((c) => (
           <div className="candidate-row" key={c.id}>
-            <span className="order">{String(c.audition_order).padStart(2, '0')}</span>
+            {!c.excluded && (
+              <span className="order">
+                {String(
+                  visibleCandidates.findIndex((candidate) => candidate.id === c.id) + 1,
+                ).padStart(2, '0')}
+              </span>
+            )}
             <a className="candidate-name" href={`/candidate/${c.id}`}>
               <b>
                 {c.first_name} {c.last_name}
@@ -524,9 +530,14 @@ export function Workspace({ path }: { path: string[] }) {
                             : 'Activate Deliberation'}
                         </button>
                       )}
-                      {(admin || s.unlocked) && (
+                      {admin && (
                         <a className="button" href={`/api/export/${cycle.id}`}>
                           Export XLSX
+                        </a>
+                      )}
+                      {admin && (
+                        <a className="button" href={`/api/export/${cycle.id}?all=true`}>
+                          Export All Candidates
                         </a>
                       )}
                     </div>
@@ -660,7 +671,17 @@ export function Workspace({ path }: { path: string[] }) {
                       <span className="eyebrow">GETTING TO KNOW YOU</span>
                       <h2>Personal Info</h2>
                       <p>
-                        {username(detail.candidate.note_taker_id)} is the designated note taker.
+                        {username(detail.candidate.note_taker_id)} is the designated note taker for
+                        personal info.
+                        {detail.candidate.note_taker_id !== s.user.id && (
+                          <>
+                            {' '}
+                            Your review will open when {username(
+                              detail.candidate.note_taker_id,
+                            )}{' '}
+                            finishes this part.
+                          </>
+                        )}
                       </p>
                     </div>
                   </div>
@@ -693,10 +714,6 @@ export function Workspace({ path }: { path: string[] }) {
                     <div className="empty">
                       <AudioLines />
                       <h3>Personal Info is underway</h3>
-                      <p>
-                        Your review will open automatically when{' '}
-                        {username(detail.candidate.note_taker_id)} begins the vocal audition.
-                      </p>
                     </div>
                   )}
                 </section>
@@ -801,10 +818,15 @@ export function Workspace({ path }: { path: string[] }) {
                     <h1>Deliberation board</h1>
                     <p>Drag candidates into place. Every move is saved and reversible.</p>
                   </div>
-                  {(admin || s.unlocked) && (
-                    <a className="button" href={`/api/export/${cycle.id}`}>
-                      Export XLSX
-                    </a>
+                  {admin && (
+                    <div className="actions">
+                      <a className="button" href={`/api/export/${cycle.id}`}>
+                        Export XLSX
+                      </a>
+                      <a className="button" href={`/api/export/${cycle.id}?all=true`}>
+                        Export All Candidates
+                      </a>
+                    </div>
                   )}
                 </div>
                 <Board
@@ -877,9 +899,9 @@ export function Workspace({ path }: { path: string[] }) {
                     <h1>All audition data</h1>
                     <p>Includes excluded candidates. Unlock expires after eight hours.</p>
                   </div>
-                  {cycle && (
-                    <a className="button" href={`/api/export/${cycle.id}`}>
-                      Export XLSX
+                  {admin && cycle && (
+                    <a className="button" href={`/api/export/${cycle.id}?all=true`}>
+                      Export All Candidates
                     </a>
                   )}
                 </div>
