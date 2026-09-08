@@ -133,7 +133,10 @@ export async function mutate(operation: string, payload: Record<string, unknown>
       };
       break;
     case 'deliberate':
-      payload = { cycleId: z.uuid().parse(payload.cycleId) };
+      payload = {
+        cycleId: z.uuid().parse(payload.cycleId),
+        active: z.boolean().parse(payload.active),
+      };
       break;
     case 'start':
       payload = { id: id(), noteTakerId: z.uuid().parse(payload.noteTakerId) };

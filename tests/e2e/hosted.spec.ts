@@ -102,7 +102,7 @@ test('two real identities: durable autosave, privacy, realtime workflow, board a
       value: 'GREEN',
     });
     await mutate(a, 'close', { id: c.id });
-    await expect(alice.getByRole('heading', { name: 'Council Overall colors' })).toBeVisible({
+    await expect(alice.getByRole('heading', { name: 'Council Overall Ratings' })).toBeVisible({
       timeout: 10000,
     });
     const completed = await (await b.request.get(`${baseURL}/api/candidate/${c.id}`)).json();
@@ -118,7 +118,7 @@ test('two real identities: durable autosave, privacy, realtime workflow, board a
     await expect(alice.getByRole('heading', { name: 'Verification Singer' })).toBeVisible({
       timeout: 10000,
     });
-    await mutate(a, 'deliberate', { cycleId: cycle.id });
+    await mutate(a, 'deliberate', { cycleId: cycle.id, active: true });
     await alice.goto('/deliberation');
     await lucas.goto('/deliberation');
     await expect(alice.getByRole('link', { name: 'Upcoming Singer' })).toBeVisible();
@@ -137,7 +137,7 @@ test('two real identities: durable autosave, privacy, realtime workflow, board a
         .locator('.board-card')
         .filter({ hasText: 'Verification Singer' })
         .locator('.team-overall'),
-    ).toContainText('RED', { timeout: 10000 });
+    ).toContainText('Weak', { timeout: 10000 });
     const detailed = await (await b.request.get(`${baseURL}/api/candidate/${c.id}`)).json();
     expect(JSON.stringify(detailed.peers)).toContain('LUCAS PRIVATE NOTE');
     expect(detailed.team.overall_rating).toBe('RED');
